@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dating Form 😘</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <p>Dating Form 😘 (for real rizzards)</p>
+        <fieldset>
+            <legend>Personal Information</legend>
+        </fieldset>
+        <fieldset>
+            <legend>Preferences</legend>
+            <input oninput="document.getElementById('ageDisplay').innerHTML = this.value>=18?this.value:'WHAT THE FLIP DIDDY'" type="range" min="0" max="100" step="1" value="20"/><p id="ageDisplay" class="inputOut">20</p>
+            <input oninput="document.getElementById('heightDisplay').innerHTML = this.value+' inches'" type="range" min="36" max="96" step="1" value="65"/><p id="heightDisplay" class="inputOut">65 inches</p>
+        </fieldset>
+        <fieldset>
+            <legend>Picture</legend>
+            <input type="file" accept="image" accept="image/png, image/gif, image/jpeg"/>
+            <p class="desc">Upload a picture of yourself!</p>
+        </fieldset>
+        <fieldset>
+            <legend>Contact Info</legend>
+        </fieldset>
+        <p>made by sonit</p>
+    </div>
+</body>
+</html>
