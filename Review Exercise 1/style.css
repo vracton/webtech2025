@@ -1,3 +1,7 @@
+* {
+    transition: alls 0.3s;
+}
+
 body {
     font-family: 'Comic Sans MS', sans-serif;
     margin: 0;
@@ -8,4 +12,99 @@ body {
     align-items: center;
     height: 100vh;
     text-align: center;
+}
+
+.container {
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 16px;
+}
+
+fieldset {
+    background-color: #e9e9e9;
+    border-radius: 16px;
+}
+
+.desc {
+    font-size: 0.75em;
+    color: #666;
+    margin: 0;
+    margin-bottom: 3px;
+}
+
+button {
+    padding: 5px;
+    border: 2px solid rgb(96, 255, 202);
+    border-radius: 16px;
+    background-color: aquamarine;
+    margin-top: 5px;
+    color: #111;
+    cursor: pointer;
+}
+
+input[type="file"] {
+    padding: 5px;
+    border: 2px solid rgb(96, 255, 202);
+    border-radius: 16px;
+    background-color: aquamarine;
+    margin-top: 5px;
+    color: #111;
+    cursor: pointer;
+}
+
+input[type="text"], input[type="tel"], input[type="email"], input[type="date"], select {
+    padding: 5px;
+    border: 2px solid rgb(96, 255, 202);
+    border-radius: 16px;
+    margin-top: 5px;
+}
+
+input[type='radio']:after {
+    width: 13px;
+    height: 13px;
+    border-radius: 15px;
+    position: relative;
+    background-color: #8f8f8f;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+}
+
+input[type='radio']:checked:after {
+    width: 13px;
+    height: 13px;
+    border-radius: 15px;
+    position: relative;
+    background-color: aquamarine;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+}
+
+#title {
+    font-size: 1.5em;
+    margin: 0;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+input[type="color"] {
+    margin-top: 5px;
+    -webkit-appearance: none;
+    border: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 50%;
 }
