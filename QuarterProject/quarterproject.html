@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papitankar's Car Rental</title>
+    <style>
+        body {
+            font-family: "Comic Sans MS", Arial, sans-serif;
+            background-color: #1e1e2e;
+            color: #cdd6f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .header {
+            background-color: #45475a;
+            width: 100%;
+            text-align: center;
+            padding: 15px;
+            font-size: 24px;
+        }
+        .top-box {
+            background-color: #313244;
+            padding: 15px;
+            font-size: 20px;
+            border-radius: 16px;
+            margin-top: 15px;
+            text-align: center;
+            width: 20%;
+        }
+        #date {
+            margin-bottom: 10px;
+            margin-top: 0;
+        }
+        .container {
+            display: flex;
+            width: calc(100vw - 30px);
+            margin-top: 15px;
+        }
+        .left-section {
+            width: calc(30vw - 15px);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-right: 15px;
+        }
+        .box {
+            background-color: #313244;
+            padding: 15px;
+            border-radius: 16px;
+            text-align: center;
+        }
+        .scroll-box {
+            max-height: calc(30vh + 8px * 7 + 2px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .scroll-box::-webkit-scrollbar {
+            display: none;
+        }
+        .rented-car {
+            display: flex;
+            align-items: center;
+            background-color: #45475a;
+            padding: 7px;
+            border-radius: 8px;
+            width: calc(100% - 14px);
+            text-align: left !important;
+            height: 10vh;
+        }
+        .rented-car img {
+            height: calc(100%);
+            border-radius: 5px;
+            margin-right: 7px;
+        }
+        .car-info {
+            flex-grow: 1;
+        }
+        .car-days {
+            font-size: 20px;
+            text-align: right;
+        }
+        .right-section {
+            width: calc(70vw - 15px);
+            position: relative;
+        }
+        canvas {
+            background-color: #585b70;
+            width: 100%;
+            border-radius: 16px;
+        }
+        button {
+            background-color: #f2cdcd;
+            border:none;
+            color: #11111b;
+            font-weight: 700;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        input, select {
+            border: 1px solid #f5e0dc;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Papitankar's Car Rental</div>
+    <div class="top-box">
+        <p id="date"></p>
+        <button onclick="advanceDay()">Go forward a day</button>
+    </div>
+    <div class="container">
+        <div class="left-section">
+            <div class="box">
+                <label>Name: <input type="text" id="name" required style="border-radius: 8px; padding: 2px;"></label><br>
+                <label>Email: <input type="email" id="email" required style="border-radius: 8px; padding: 2px;margin-top:3px;"></label><br>
+                <label>Car Choice:
+                    <select id="car" required style="border-radius: 8px; padding: 2px;margin-top:3px;"></select>
+                </label><br>
+                <label>Number of Days: <input type="number" id="days" min="1" required style="margin-bottom: 10px;border-radius: 8px; padding: 2px;margin-top:3px;"></label><br>
+                <button onclick="rentCar()">Rent</button>
+            </div>
+            <div class="box scroll-box" id="rentedCars">No cars have been rented yet.</div>
+        </div>
+        <div class="right-section">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        const scale = window.devicePixelRatio || 1;
+        canvas.width = 600 * scale;
+        canvas.height = 300 * scale;
+        canvas.style.width = "calc(70vw - 15px)";
+        canvas.style.height = "64vh";
+        ctx.scale(scale, scale);
+        const cars = ["Banana Car","Skibidi Buzzsaw Car","Diddy's Schoolbus","DaBaby Car","Speed Personified","Peel P50","M1 Abrams Main Battle Tank","Swat Van","RT-2PM2 Topol-M","Weebmobile"];
+        const carImages = {
+            "Banana Car": "banana.png",
+            "Skibidi Buzzsaw Car": "buzzsaw.png",
+            "Diddy's Schoolbus": "diddybus.png",
+            "DaBaby Car":"dababy.png",
+            "Speed Personified": "mcqueen.jpeg",
+            "Peel P50": "peelp50.png",
+            "M1 Abrams Main Battle Tank": "m1abrams.png",
+            "Swat Van": "swat.png",
+            "RT-2PM2 Topol-M": "topolm.png",
+            "Weebmobile": "weebmobile.png"
+        };
+        let rentedCars = [];
+        let currentDate = new Date();
+        currentDate.setDate(currentDate.getDate()-1);
+        advanceDay();
+
+        function populateCarOptions() {
+            const carSelect = document.getElementById("car");
+            carSelect.innerHTML = "";
+            Object.keys(carImages).forEach(car => {
+                const option = document.createElement("option");
+                option.value = car;
+                option.textContent = car;
+                carSelect.appendChild(option);
+                if (rentedCars.some(r => r.car === car)) {
+                    option.disabled = true;
+                }
+            });
+        }
+
+        function drawScene() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#313244";
+            ctx.fillRect(0, 120, canvas.width, 60);
+            ctx.fillStyle = "#cdd6f4";
+            ctx.setLineDash([20, 20]);
+            ctx.beginPath();
+            ctx.moveTo(0, 150);
+            ctx.lineTo(canvas.width, 150);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.textAlign = 'center';
+            ctx.font="13px Comic Sans MS"
+            cars.forEach((car, index) => {
+                ctx.fillStyle = rentedCars.some(r => r.car === car) ? "#888" : ((index%2==0)?"#cdd6f4":"#b4befe");
+                ctx.fillText(car, 60 + (index%5) * 120, index<5?35:270);
+            });
+            Object.keys(carImages).forEach((car, index) => {
+                const img = new Image();
+                img.src = "./images/"+carImages[car];
+                img.onload = () => {
+                    const isRented = rentedCars.some(r => r.car === car);
+                    ctx.globalAlpha = isRented ? 0.5 : 1;
+                    ctx.drawImage(img, 10+(index%5) * 120, index<5?50:195, 100, 60);
+                    ctx.globalAlpha = 1;
+                };
+            });
+        }
+
+        function rentCar() {
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const car = document.getElementById("car").value;
+            const days = parseInt(document.getElementById("days").value);
+            if (!car || rentedCars.some(r => r.car === car)) {
+                alert("This car is already rented or unavailable.");
+                return;
+            }
+            if (name && email && car && days > 0) {
+                rentedCars.push({ name, email, car, days });
+                populateCarOptions();
+                updateRentedList();
+                drawScene();
+            }
+        }
+
+        function advanceDay() {
+            currentDate.setDate(currentDate.getDate() + 1);
+            document.getElementById("date").textContent = "Today is " + currentDate.toDateString();
+            rentedCars.forEach(r => r.days--);
+            rentedCars = rentedCars.filter(r => r.days > 0);
+            populateCarOptions();
+            updateRentedList();
+            drawScene();
+        }
+        function updateRentedList() {
+            const rentedDiv = document.getElementById("rentedCars");
+            rentedDiv.innerHTML = rentedCars.length ? rentedCars.map(r => `
+                <div class='rented-car'>
+                    <img src='./images/${carImages[r.car]}' />
+                    <div class='car-info'>
+                        <strong>${r.car}</strong><br>
+                        <p style='margin:0;font-size:16px;'>${r.name}</p>
+                        <p style='margin:0;font-size:12px;'>${r.email}</p>
+                    </div>
+                    <div class='car-days'>
+                        <p style="text-align: center; margin: 0;font-weight:bold;">${r.days}</p>
+                        <p style='margin:0;font-size:14px'>Day${r.days!=1?"s":""}</p>
+                    </div>
+                </div>
+            `).join("") : "No cars have been rented yet.";
+        }
+        populateCarOptions();
+        drawScene();
+    </script>
+</body>
+</html>
