@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Canvas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        nav {
+            background-color: #333;
+            padding: 10px;
+        }
+        button {
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #777;
+        }
+        canvas {
+            display: block;
+            margin: 20px auto;
+            background-color: white;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <button onclick="drawCircle()">Draw Circle</button>
+        <button onclick="drawRectangle()">Draw Rectangle</button>
+        <button onclick="drawLine()">Draw Line</button>
+    </nav>
+    
+    <input type="text" id="colorInput" placeholder="Enter color" style="margin-top: 10px;">
+    <canvas id="myCanvas" width="600" height="400"></canvas>
+    
+    <script>
+        // Get canvas and context
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+
+        // Function to get user input color
+        function getColor() {
+            return document.getElementById("colorInput").value || "black";
+        }
+
+        // Function to draw a circle
+        function drawCircle() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.arc(300, 200, 50, 0, 2 * Math.PI);
+            ctx.fillStyle = getColor();
+            ctx.fill();
+            ctx.stroke();
+        }
+
+        // Function to draw a rectangle
+        function drawRectangle() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = getColor();
+            ctx.fillRect(200, 150, 200, 100);
+            ctx.strokeRect(200, 150, 200, 100);
+        }
+
+        // Function to draw a line
+        function drawLine() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.moveTo(100, 100);
+            ctx.lineTo(500, 300);
+            ctx.strokeStyle = getColor();
+            ctx.lineWidth = 5;
+            ctx.stroke();
+        }
+    </script>
+</body>
+</html>

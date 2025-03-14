@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Array Tutorials</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e2e;
+            color: #cdd6f4;
+            padding: 20px;
+        }
+
+        .container {
+            width: 60%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h1 {
+            color: #f5e0dc;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        button {
+            background-color: #45475a;
+            color: #cdd6f4;
+            padding: 10px 20px;
+            margin: 5px;
+            border: 2px solid #cdd6f4;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 12px;
+        }
+
+        button:hover {
+            background-color: #585b70;
+        }
+
+        #output {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #f5e0dc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Array Operations</h1>
+        <p>Please select one of the following:</p>
+        <ul>
+            <li><button onclick="menuOption(1)">Represent array elements as a string</button></li>
+            <li><button onclick="menuOption(2)">Find the most frequent element in an array</button></li>
+            <li><button onclick="menuOption(3)">Find the sum of squares of all the elements in an array</button></li>
+            <li><button onclick="menuOption(4)">Add the corresponding elements of two arrays</button></li>
+            <li><button onclick="menuOption(5)">Quit the program</button></li>
+        </ul>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        function representArrayAsString(arr) {
+            arr.sort();
+            return arr.join(" + ");
+        }
+
+        function mostFrequentElement(arr) {
+            const frequency = {};
+            let maxCount = 0;
+            let mostFrequent = null;
+            
+            arr.forEach(item => {
+                frequency[item] = (frequency[item] || 0) + 1;
+                if (frequency[item] > maxCount) {
+                    maxCount = frequency[item];
+                    mostFrequent = item;
+                }
+            });
+
+            return `The most repeated element is '${mostFrequent}' and is repeated ${maxCount} times.`;
+        }
+
+        function sumOfSquares(arr) {
+            return arr.reduce((sum, num) => sum + num * num, 0);
+        }
+
+        function addArrays(arr1, arr2) {
+            const length = Math.max(arr1.length, arr2.length);
+            const result = [];
+
+            for (let i = 0; i < length; i++) {
+                result.push((arr1[i] || 0) + (arr2[i] || 0));
+            }
+
+            return result;
+        }
+
+        function menuOption(option) {
+            let output = document.getElementById("output");
+            let result = '';
+
+            switch(option) {
+                case 1:
+                    const myColor = ["White", "Red", "Black", "Green"];
+                    result = "The string from a given array is: " + representArrayAsString(myColor);
+                    break;
+                case 2:
+                    const arr1 = [3, 'a', 'a', 'a', 2, 3, 'a', 3, 'a', 2, 4, 9, 3];
+                    result = mostFrequentElement(arr1);
+                    break;
+                case 3:
+                    const numericArray = [0, 1, 2, 3, 4];
+                    result = "The sum of the squares of the elements of array [0,1,2,3,4] is: " + sumOfSquares(numericArray);
+                    break;
+                case 4:
+                    const array1 = [1, 0, 2, 3, 4];
+                    const array2 = [3, 5, 6, 7, 8, 13];
+                    result = "The sum of the corresponding elements of the arrays is: [" + addArrays(array1, array2).join(", ") + "]";
+                    break;
+                case 5:
+                    result = "Quitting the program!";
+                    output.innerHTML = result;
+                    window.close();
+                    return;
+                default:
+                    result = "Invalid option!";
+            }
+
+            output.innerHTML = result;
+        }
+    </script>
+</body>
+</html>

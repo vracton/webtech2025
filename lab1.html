@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 1</title>
+    <style>
+        body {
+            background-color: #1e1e2e;
+            color: #cdd6f4;
+            font-family: 'Comic Sans MS', sans-serif;
+            font-size: 18px;
+        }
+        #output {
+            text-align: center;
+            margin-top: 20px;
+        }
+        span {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="output">
+        <span>Unbeknownest to you, your information has been provided.</span><br/><br/>
+    </div>
+    <script>
+        window.onload = function() {
+            let lower = parseInt(prompt("Enter the lower bound:"));
+            let upper = parseInt(prompt("Enter the upper bound:"));
+
+            if (lower > upper) {
+                alert("Invalid input. The lower bound must be less than or equal to the upper bound.");
+                location.reload();
+                return;
+            }
+
+            let outputDiv = document.getElementById('output');
+            for (let i = lower; i<=upper;i++){
+                if (i!=0){
+                    if (i % 15 === 0) {
+                    outputDiv.innerHTML += '<span style="color: #b4befe;">Number divisible by 15: ' + i + '</span><br>';
+                } else if (i % 3 === 0) {
+                    outputDiv.innerHTML += '<span style="color: #a6e3a1;">Number divisible by 3: ' + i + '</span><br>';
+                } else if (i % 5 === 0) {
+                    outputDiv.innerHTML += '<span style="color: #eba0ac;">Number divisible by 5: ' + i + '</span><br>';
+                }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
