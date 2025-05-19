@@ -62,7 +62,7 @@
             padding: 8px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            row-gap: 8px;
         }
         .scroll-box::-webkit-scrollbar {
             display: none;
@@ -191,7 +191,11 @@
             ctx.font="13px Comic Sans MS"
             cars.forEach((car, index) => {
                 ctx.fillStyle = rentedCars.some(r => r.car === car) ? "#888" : ((index%2==0)?"#cdd6f4":"#b4befe");
-                ctx.fillText(car, 60 + (index%5) * 120, index<5?35:270);
+                ctx.fillText(car, 60 + (index%5) * 120, index<5?35:280);
+                if (rentedCars.some(r => r.car === car)){
+                    ctx.fillStyle = "#888"
+                    ctx.fillText("Rented", 60 + (index%5) * 120, index<5?115:200);
+                }
             });
             Object.keys(carImages).forEach((car, index) => {
                 const img = new Image();
@@ -199,7 +203,7 @@
                 img.onload = () => {
                     const isRented = rentedCars.some(r => r.car === car);
                     ctx.globalAlpha = isRented ? 0.5 : 1;
-                    ctx.drawImage(img, 10+(index%5) * 120, index<5?50:195, 100, 60);
+                    ctx.drawImage(img, 10+(index%5) * 120, index<5?40:205, 100, 60);
                     ctx.globalAlpha = 1;
                 };
             });
@@ -211,22 +215,88 @@
             const car = document.getElementById("car").value;
             const days = parseInt(document.getElementById("days").value);
             if (!car || rentedCars.some(r => r.car === car)) {
-                alert("This car is already rented or unavailable.");
-                return;
+            alert("This car is already rented or unavailable.");
+            return;
             }
             if (name && email && car && days > 0) {
-                rentedCars.push({ name, email, car, days });
+                price = Math.floor(days*((Math.random()*10)+5)*car.length/2)
+                rentedCars.push({ name, email, car, days, price });
                 populateCarOptions();
                 updateRentedList();
                 drawScene();
+                animateCarDriveOff(car);
             }
+        }
+
+        function animateCarDriveOff(car) {
+            const carIndex = cars.indexOf(car);
+            const img = new Image();
+            img.src = "./images/" + carImages[car];
+            img.onload = () => {
+            let x = 10;
+            let y = 125;
+            const interval = setInterval(() => {
+            ctx.clearRect(x, y, 100, 60);
+
+            ctx.fillStyle = "#313244";
+            ctx.fillRect(0, 120, canvas.width, 60);
+            ctx.fillStyle = "#cdd6f4";
+            ctx.setLineDash([20, 20]);
+            ctx.beginPath();
+            ctx.moveTo(0, 150);
+            ctx.lineTo(canvas.width, 150);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            x += 10;
+            if (x > canvas.width) {
+            clearInterval(interval);
+            drawScene();
+            } else {
+            ctx.drawImage(img, x, y, 100, 60);
+            }
+            }, 30);
+            };
+        }
+
+        function animateCarDriveOn(car) {
+            const carIndex = cars.indexOf(car);
+            const img = new Image();
+            img.src = "./images/" + carImages[car];
+            img.onload = () => {
+            let x = canvas.width-100;
+            let y = 125;
+            const interval = setInterval(() => {
+            ctx.clearRect(x, y, 100, 60);
+
+            ctx.fillStyle = "#313244";
+            ctx.fillRect(0, 120, canvas.width, 60);
+            ctx.fillStyle = "#cdd6f4";
+            ctx.setLineDash([20, 20]);
+            ctx.beginPath();
+            ctx.moveTo(0, 150);
+            ctx.lineTo(canvas.width, 150);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            x -= 10;
+            if (x < 10) {
+            clearInterval(interval);
+            drawScene();
+            } else {
+            ctx.drawImage(img, x, y, 100, 60);
+            }
+            }, 30);
+            };
         }
 
         function advanceDay() {
             currentDate.setDate(currentDate.getDate() + 1);
             document.getElementById("date").textContent = "Today is " + currentDate.toDateString();
             rentedCars.forEach(r => r.days--);
+            const carsToReturn = rentedCars.filter(r => r.days <= 0).map(r => r.car);
             rentedCars = rentedCars.filter(r => r.days > 0);
+            carsToReturn.forEach(car => animateCarDriveOn(car));
             populateCarOptions();
             updateRentedList();
             drawScene();
@@ -237,7 +307,7 @@
                 <div class='rented-car'>
                     <img src='./images/${carImages[r.car]}' />
                     <div class='car-info'>
-                        <strong>${r.car}</strong><br>
+                        <strong>${r.car} | <span style='font-size:14px'>$${r.price}</span></strong><br>
                         <p style='margin:0;font-size:16px;'>${r.name}</p>
                         <p style='margin:0;font-size:12px;'>${r.email}</p>
                     </div>

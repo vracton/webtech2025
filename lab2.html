@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 1</title>
+    <style>
+        body {
+            background-color: #1e1e2e;
+            color: #cdd6f4;
+            font-family: 'Comic Sans MS', sans-serif;
+            font-size: 18px;
+            text-align: center;
+        }
+        #title {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #f5e0dc;
+        }
+        #hover, #click {
+            font-size: 20px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <p id="title">Please work with the text here:</p>
+    <p id="hover">MOUSEOVER TO MAKE UPPERCASE/LOWERCASE</p>
+    <p id="click">onclick to change font size</p>
+    <script>
+        var upper = true;
+        document.getElementById("click").style.fontSize = "20px";
+        document.getElementById("hover").addEventListener("mouseover", function() {
+            this.innerHTML = upper?this.innerHTML.toLowerCase():this.innerHTML.toUpperCase();
+            upper = !upper;
+        });
+        document.getElementById("click").addEventListener("click", function() {
+            this.style.fontSize = this.style.fontSize === "20px"?"30px":"20px";
+        });
+    </script>
+</body>
+</html>
